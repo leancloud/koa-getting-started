@@ -9,21 +9,22 @@ const views = require('koa-views');
 const statics = require('koa-static');
 const bodyParser = require('koa-bodyparser');
 
-// 加载云函数定义，你可以将云函数拆分到多个文件方便管理，但需要在主文件中加载它们
+// Loads cloud function definitions.
+// You can split it into multiple files but do not forget to load them in the main file.
 require('./cloud');
 
 const app = new Koa();
 
-// 设置模版引擎
+// Configures template engine.
 app.use(views(path.join(__dirname, 'views')));
 
-// 设置静态资源目录
+// Configures static resources directory.
 app.use(statics(path.join(__dirname, 'public')));
 
 const router = new Router();
 app.use(router.routes());
 
-// 加载云引擎中间件
+// Loads LeanEngine middleware.
 app.use(AV.koa());
 
 app.use(bodyParser());
@@ -33,7 +34,7 @@ router.get('/', async function(ctx) {
   await ctx.render('./index.ejs');
 });
 
-// 可以将一类的路由单独保存在一个文件中
+// You can store routings in multiple files according to their categories.
 app.use(require('./routes/todos').routes());
 
 module.exports = app;
